@@ -63,7 +63,7 @@ while [[ $@ ]]; do
     if [[ $1 =~ [0-9]{81} ]]; then
         s=$1
         shift
-    elif [[ $1 =~ [0-9] ]] && [[ $1 =~ \. ]] && [[ ${#1} -eq 81 ]]; then
+    elif [[ $1 =~ [0-9\.]{81} ]]; then
         p=$1
         shift
     elif [[ $1 == -pf ]]; then
