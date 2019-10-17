@@ -9,73 +9,62 @@ fi
 function checkSolution {
 	# given a house, check that digits 0-9 are all present
 	function check {
-        for (( k=1; k<=9; k++ )); do
-            if [[ ! $1 =~ $k ]]; then
-                echo invalid solution
-                exit 1
-            fi
-        done
-    }
+	for (( k=1; k<=9; k++ )); do
+		if [[ ! $1 =~ $k ]]; then
+			echo invalid solution
+			exit 1
+		fi
+	done
+	}
 
-    # check columns
-    for (( i=0; i<9; i++ )); do
-        h=""
-        for (( j=i; j<81; j+=9 )); do
-            h+=${1:$j:1}
-        done
+	# check columns
+	for (( i=0; i<9; i++ )); do
+		h=""
+		for (( j=i; j<81; j+=9 )); do
+			h+=${1:$j:1}
+		done
 
-        check $h
-    done
+		check $h
+	done
 
-    # check rows
-    for (( i=0; i<81; i+=9 )); do
-        check ${1:$i:9}
-    done
+	# check rows
+	for (( i=0; i<81; i+=9 )); do
+		check ${1:$i:9}
+	done
 
-    # check boxes
-    for i in 0 3 6 27 30 33 54 57 60; do
-        check ${1:$i:3}${1:$i+9:3}${1:$i+18:3}
-    done
+	# check boxes
+	for i in 0 3 6 27 30 33 54 57 60; do
+		check ${1:$i:3}${1:$i+9:3}${1:$i+18:3}
+	done
 }
 
 # add a comma after every character
 function format {
-    out=""
-    for (( i=0; i<${#1}; i++ )); do
-        out+=${1:$i:1},
-    done
-    echo ${out%?}
+	out=""
+	for (( i=0; i<${#1}; i++ )); do
+		out+=${1:$i:1},
+	done
+	echo ${out%?}
 }
-
-# make sure pdflatex and ImageMagick are both installed
-if [[ ! $( command -v pdflatex ) ]]; then
-    echo pdflatex is required
-    exit 1
-fi
-
-if [[ ! $( command -v convert ) ]]; then
-    echo ImageMagick is required
-    exit 1
-fi
 
 # get problem, solution, problem formatting, and solution formatting from arguments
 while [[ $@ ]]; do
-    if [[ $1 =~ [0-9]{81} ]]; then
-        s=$1
-        shift
-    elif [[ $1 =~ [0-9\.]{81} ]]; then
-        p=$1
-        shift
-    elif [[ $1 == -pf ]]; then
-        pf=$2
-        shift 2
-    elif [[ $1 == -sf ]]; then
-        sf=$2
-        shift 2
+	if [[ $1 =~ [0-9]{81} ]]; then
+		s=$1
+		shift
+	elif [[ $1 =~ [0-9\.]{81} ]]; then
+		p=$1
+		shift
+	elif [[ $1 == -pf ]]; then
+		pf=$2
+		shift 2
+	elif [[ $1 == -sf ]]; then
+		sf=$2
+		shift 2
 	elif [[ $1 == -f ]]; then
 		f=$2
 		shift 2
-    else
+	else
 		shift
 	fi
 done
@@ -144,14 +133,14 @@ if [[ $p ]]; then
 	\pagecolor{white}
 
 	\begin{document}
-	\begin{tikzpicture}
-		\draw[ultra thick] (0,0) rectangle (9,9);
-		\draw[very thick, step=3] (0,0) grid (9,9);
-		\draw[step=1] (0,0) grid (9,9);
-		\foreach \v [count=\i from 0] in {$p} {
-			\node at ({Mod(\i,9)+0.5},{int(\i/9)+0.5}) {\ifthenelse{\equal{\v}{.}}{}{$pf}};
-		}
-	\end{tikzpicture}
+		\begin{tikzpicture}
+			\draw[ultra thick] (0,0) rectangle (9,9);
+			\draw[very thick, step=3] (0,0) grid (9,9);
+			\draw[step=1] (0,0) grid (9,9);
+			\foreach \v [count=\i from 0] in {$p} {
+				\node at ({Mod(\i,9)+0.5},{int(\i/9)+0.5}) {\ifthenelse{\equal{\v}{.}}{}{$pf}};
+			}
+		\end{tikzpicture}
 	\end{document}" > sudoku.tex
 	pdflatex sudoku.tex &> /dev/null
 	convert -density 300 -define profile:skip=ICC sudoku.pdf problem.png
@@ -163,17 +152,17 @@ if [[ $s ]] && [[ $p ]]; then
 	\pagecolor{white}
 
 	\begin{document}
-	\begin{tikzpicture}
-		\draw[ultra thick] (0,0) rectangle (9,9);
-		\draw[very thick, step=3] (0,0) grid (9,9);
-		\draw[step=1] (0,0) grid (9,9);
-		\foreach \v [count=\i from 0] in {$s} {
-			\node at ({Mod(\i,9)+0.5},{int(\i/9)+0.5}) {\ifthenelse{\equal{\v}{.}}{}{$sf}};
-		}
-		\foreach \v [count=\i from 0] in {$p} {
-			\node at ({Mod(\i,9)+0.5},{int(\i/9)+0.5}) {\ifthenelse{\equal{\v}{.}}{}{$pf}};
-		}
-	\end{tikzpicture}
+		\begin{tikzpicture}
+			\draw[ultra thick] (0,0) rectangle (9,9);
+			\draw[very thick, step=3] (0,0) grid (9,9);
+			\draw[step=1] (0,0) grid (9,9);
+			\foreach \v [count=\i from 0] in {$s} {
+				\node at ({Mod(\i,9)+0.5},{int(\i/9)+0.5}) {\ifthenelse{\equal{\v}{.}}{}{$sf}};
+			}
+			\foreach \v [count=\i from 0] in {$p} {
+				\node at ({Mod(\i,9)+0.5},{int(\i/9)+0.5}) {\ifthenelse{\equal{\v}{.}}{}{$pf}};
+			}
+		\end{tikzpicture}
 	\end{document}" > sudoku.tex
 	pdflatex sudoku.tex &> /dev/null
 	convert -density 300 -define profile:skip=ICC sudoku.pdf solution.png
@@ -184,14 +173,14 @@ elif [[ $s ]] && [[ ! $p ]]; then
 	\pagecolor{white}
 
 	\begin{document}
-	\begin{tikzpicture}
-		\draw[ultra thick] (0,0) rectangle (9,9);
-		\draw[very thick, step=3] (0,0) grid (9,9);
-		\draw[step=1] (0,0) grid (9,9);
-		\foreach \v [count=\i from 0] in {$s} {
-			\node at ({Mod(\i,9)+0.5},{int(\i/9)+0.5}) {\ifthenelse{\equal{\v}{.}}{}{$sf}};
-		}
-	\end{tikzpicture}
+		\begin{tikzpicture}
+			\draw[ultra thick] (0,0) rectangle (9,9);
+			\draw[very thick, step=3] (0,0) grid (9,9);
+			\draw[step=1] (0,0) grid (9,9);
+			\foreach \v [count=\i from 0] in {$s} {
+				\node at ({Mod(\i,9)+0.5},{int(\i/9)+0.5}) {\ifthenelse{\equal{\v}{.}}{}{$sf}};
+			}
+		\end{tikzpicture}
 	\end{document}" > sudoku.tex
 	pdflatex sudoku.tex &> /dev/null
 	convert -density 300 -define profile:skip=ICC sudoku.pdf solution.png
