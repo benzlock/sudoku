@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 if [[ $# == 0 ]]; then
-	echo "usage: sudoku 6..8.32.......9.41.9..2........173...1.9.8.7...863........9..5.92.3.......37.6..4 641873295832569741597421638459217386316948572278635419764192853925384167183756924 -pf '\Huge{\' -sf '\textcolor{red}{\Huge{\'"
+	echo "usage: sudoku 6..8.32.......9.41.9..2........173...1.9.8.7...863........9..5.92.3.......37.6..4 641873295832569741597421638459217386316948572278635419764192853925384167183756924 -pf '\Huge{' -sf '\textcolor{red}{\Huge{'"
 	exit 0
 fi
 
 # check that the solution is valid
 function checkSolution {
 	# given a house, check that digits 0-9 are all present
-    function check {
+	function check {
         for (( k=1; k<=9; k++ )); do
             if [[ ! $1 =~ $k ]]; then
                 echo invalid solution
