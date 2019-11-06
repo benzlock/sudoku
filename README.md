@@ -19,3 +19,4 @@ $ sudoku 6..8.32.......9.41.9..2........173...1.9.8.7...863........9..5.92.3....
 * The validity of the solution is checked, as well as and whether the problem and solution match, or `problem[i] = solution[i]` if `problem[i]` is not a dot.
 
 Requires `pdflatex` and [ImageMagick](https://imagemagick.org/) to run.
+
